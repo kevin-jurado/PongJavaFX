@@ -17,6 +17,6 @@ public class Constants {
 
     public static final Point2D _Padding = new Point2D(50.0, 0.0);
 
-    public static final Double _PaddleSpeed = 0.2;
+    public static final Double _PaddleSpeed = 2.5;
 
 }

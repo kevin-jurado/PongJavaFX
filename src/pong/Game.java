@@ -12,6 +12,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+// This is the root of the game
+// Allows the game to preform scene initialization and the initial construction of the scene
 public class Game{
 
     // Set up initial positions
@@ -37,11 +39,10 @@ public class Game{
         root.getChildren().add(canvas);
         primaryStage.setScene(scene);
 
-        update();
-        System.out.println("Hello there.");
-
         new AnimationTimer()
         {
+            // TODO Try using an override method
+            @Override
             public void handle(long currentNanoTime)
             {
                 //long startNanoTime;
@@ -55,7 +56,9 @@ public class Game{
 
     }
 
+    // Draw the objects
     private void update(){
+        System.out.println(posPlrPaddle.getY() + " Update");
         gc.clearRect(0, 0, Constants._X, Constants._Y);
         drawObjects();
     }
@@ -78,14 +81,17 @@ public class Game{
                 Constants._BallRadius, Constants._BallRadius);
     }
 
+    // This is the listener for any time an even happens
     private void handleUserInput(KeyEvent e){
         KeyCode key = e.getCode();
 
         if (key == KeyCode.W || key == KeyCode.UP){
-            posPlrPaddle.add(0, - Constants._PaddleSpeed);
+            posPlrPaddle = posPlrPaddle.add(0, - Constants._PaddleSpeed);
+            System.out.println("UP");
         }
-        if (key == KeyCode.D || key == KeyCode.DOWN){
-            posPlrPaddle.add(0, Constants._PaddleSpeed);
+        if (key == KeyCode.S || key == KeyCode.DOWN){
+            posPlrPaddle = posPlrPaddle.add(0, Constants._PaddleSpeed);
+            System.out.println("DOWN");
         }
 
 

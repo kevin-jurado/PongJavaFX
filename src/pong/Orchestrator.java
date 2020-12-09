@@ -10,7 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-// The orchestrator
+// The orchestrator controls the scene
 public class Orchestrator extends Application {
 
     public static void main(String[] args) {
