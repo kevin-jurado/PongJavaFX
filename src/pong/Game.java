@@ -58,6 +58,7 @@ public class Game{
 
     // Draw the objects
     private void update(){
+        keepPaddleInBounds();
         System.out.println(posPlrPaddle.getY() + " Update");
         gc.clearRect(0, 0, Constants._X, Constants._Y);
         drawObjects();
@@ -81,6 +82,7 @@ public class Game{
                 Constants._BallRadius, Constants._BallRadius);
     }
 
+    // TODO Put this into it's own Paddle class
     // This is the listener for any time an even happens
     private void handleUserInput(KeyEvent e){
         KeyCode key = e.getCode();
@@ -93,7 +95,20 @@ public class Game{
             posPlrPaddle = posPlrPaddle.add(0, Constants._PaddleSpeed);
             System.out.println("DOWN");
         }
+    }
 
+    // Collision detection
+    private void keepPaddleInBounds(){
+        if(posPlrPaddle.getY() > Constants._Y){
+            posPlrPaddle = posPlrPaddle.subtract(0, - Constants._PaddleSpeed);
+        } else if (posPlrPaddle.getY() < 0){
+            posPlrPaddle = posPlrPaddle.subtract(0, - Constants._PaddleSpeed);
+        }
 
+        if(posCompPaddle.getY() > Constants._Y){
+            posCompPaddle = posCompPaddle.subtract(0, - Constants._PaddleSpeed);
+        } else if (posCompPaddle.getY() < 0){
+            posCompPaddle = posCompPaddle.subtract(0, - Constants._PaddleSpeed);
+        }
     }
 }
