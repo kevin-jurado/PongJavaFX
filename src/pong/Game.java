@@ -18,6 +18,9 @@ import javafx.stage.Stage;
 public class Game{
     // Set up initial positions
     public Point2D posBall = Constants._ScreenSize.midpoint(Point2D.ZERO);
+    public double ballSpeed;
+    public Point2D ballDirVector;
+
     // 50 is for padding, half of the screen height adjusted for the paddle size
     public Point2D posPlrPaddle = new Point2D(Constants._Padding.getX(),
             Constants._Y/2.0 - Constants._PaddleY/2.0);
@@ -25,6 +28,7 @@ public class Game{
             Constants._Y/2.0 - Constants._PaddleY/2.0);
 
     public static final Random random = new Random();
+
     public boolean isRunning = true;
     public Scene scene;
     public GraphicsContext gc;
@@ -52,6 +56,7 @@ public class Game{
 
         primaryStage.show();
 
+        launchBall();
     }
 
     // Draw the objects
@@ -60,7 +65,10 @@ public class Game{
 
         System.out.println(posPlrPaddle.getY() + " Update");
         gc.clearRect(0, 0, Constants._X, Constants._Y);
+
+        updateBall();
         drawObjects();
+
 
     }
 
@@ -104,27 +112,17 @@ public class Game{
         // Launch the ball
         boolean ballDirection = random.nextBoolean();
         // bound to an acute angle on start
-        double startingAngle = Constants._PADDLE_ANGLES[random.nextInt(5) + 1];
-
-        // Set the direction
+        double ballAngle = Constants._PADDLE_ANGLES[random.nextInt(5) + 1];
         if (ballDirection){
-            posBall.add(0, -Constants._BallStartSpeed);
-        }else {
-            posBall.add(0, Constants._BallStartSpeed);
+            ballAngle *= -1;
         }
+        ballSpeed = Constants._BallStartSpeed;
+        ballDirVector = new Point2D(Math.cos(ballAngle), Math.sin(ballAngle));
     }
 
     public void updateBall(){
-        // Draw the paddles on screen
-        gc.strokeRect(posPlrPaddle.getX(), posPlrPaddle.getY(),
-                Constants._PaddleX, Constants._PaddleY);
-        gc.strokeRect(posCompPaddle.getX(), posCompPaddle.getY(),
-                Constants._PaddleX, Constants._PaddleY);
-
-        // Draw the ball on screen
-        gc.strokeOval(posBall.getX(),
-                posBall.getY() - Constants._BallRadius,
-                Constants._BallRadius, Constants._BallRadius);
+        //
+        posBall = posBall.add(ballDirVector.multiply(ballSpeed));
     }
 
     // Get and set the pause state

@@ -11,7 +11,7 @@ public class Constants {
     public static final int _PaddleX = _X/40;
     public static final int _PaddleY = _Y/10;
     public static final int _BallRadius = _X/40;
-    public static final double _BallStartSpeed = -25.0;
+    public static final double _BallStartSpeed = -2.0;
     public static final double _BallAcceleration = -1.25;
 
     public static final Point2D _PaddleSize = new Point2D(_PaddleX, _PaddleY);
