@@ -1,5 +1,6 @@
 package pong;
 
+import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
@@ -15,7 +16,6 @@ import javafx.stage.Stage;
 // This is the root of the game
 // Allows the game to preform scene initialization and the initial construction of the scene
 public class Game{
-
     // Set up initial positions
     public Point2D posBall = Constants._ScreenSize.midpoint(Point2D.ZERO);
     // 50 is for padding, half of the screen height adjusted for the paddle size
@@ -24,6 +24,7 @@ public class Game{
     public Point2D posCompPaddle = new Point2D(Constants._X - Constants._Padding.getX() - Constants._PaddleX,
             Constants._Y/2.0 - Constants._PaddleY/2.0);
 
+    public static final Random random = new Random();
     public boolean isRunning = true;
     public Scene scene;
     public GraphicsContext gc;
@@ -45,9 +46,6 @@ public class Game{
             @Override
             public void handle(long currentNanoTime)
             {
-                //long startNanoTime;
-                //double t = (currentNanoTime - startNanoTime) / 1000000000.0;
-
                 update();
             }
         }.start();
@@ -58,15 +56,19 @@ public class Game{
 
     // Draw the objects
     private void update(){
+        // TODO pause state
+
         System.out.println(posPlrPaddle.getY() + " Update");
         gc.clearRect(0, 0, Constants._X, Constants._Y);
         drawObjects();
+
     }
 
     // TODO Pretty Up the Graphics
     // Starts the positions on the canvas
     private void drawObjects() {
         gc.setFill(Color.GREEN);
+        gc.fillRect(0, 0, Constants._X, Constants._Y);
         gc.setStroke(Color.BLUE);
 
         // Draw the paddles on screen
@@ -81,11 +83,12 @@ public class Game{
                 Constants._BallRadius, Constants._BallRadius);
     }
 
-    // This is the listener for any time an even happens
+    // This is the listener for any time an event happens
     // Collision detection
     private void handleUserInput(KeyEvent e){
         KeyCode key = e.getCode();
 
+        // Keyboard controls
         if (key == KeyCode.W && posPlrPaddle.getY() > 0 || key == KeyCode.UP && posPlrPaddle.getY() > 0 ){
             posPlrPaddle = posPlrPaddle.add(0, - Constants._PaddleSpeed);
             System.out.println("UP");
@@ -94,7 +97,42 @@ public class Game{
             posPlrPaddle = posPlrPaddle.add(0, Constants._PaddleSpeed);
             System.out.println("DOWN");
         }
+
     }
 
+    public void launchBall(){
+        // Launch the ball
+        boolean ballDirection = random.nextBoolean();
+        // bound to an acute angle on start
+        double startingAngle = Constants._PADDLE_ANGLES[random.nextInt(5) + 1];
 
+        // Set the direction
+        if (ballDirection){
+            posBall.add(0, -Constants._BallStartSpeed);
+        }else {
+            posBall.add(0, Constants._BallStartSpeed);
+        }
+    }
+
+    public void updateBall(){
+        // Draw the paddles on screen
+        gc.strokeRect(posPlrPaddle.getX(), posPlrPaddle.getY(),
+                Constants._PaddleX, Constants._PaddleY);
+        gc.strokeRect(posCompPaddle.getX(), posCompPaddle.getY(),
+                Constants._PaddleX, Constants._PaddleY);
+
+        // Draw the ball on screen
+        gc.strokeOval(posBall.getX(),
+                posBall.getY() - Constants._BallRadius,
+                Constants._BallRadius, Constants._BallRadius);
+    }
+
+    // Get and set the pause state
+    public enum State{
+        PLAYING, PAUSED, ENDED;
+    }
+    private State state; // TODO set state
+    public State getState() {
+        return state;
+    }
 }
