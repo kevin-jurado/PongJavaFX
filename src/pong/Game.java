@@ -142,13 +142,15 @@ public class Game{
     // TODO Get ball colliding with paddles
     public void checkPaddleCollision(Point2D paddle){
 
-        boolean ballHit;
-        boolean ballOnPlrY = posBall.getY() + Constants._BallRadius > posPlrPaddle.getY()
-                && posBall.getY() < posBall.getY() + Constants._PaddleY;
-        boolean ballOnPlrX = posBall.getX() + Constants._BallRadius > posPlrPaddle.getX()
-                && posBall.getX() < posBall.getX() + Constants._PaddleX;
+        boolean ballOnPlrY = (posBall.getY() + Constants._BallRadius > posPlrPaddle.getY() &&
+                        posBall.getY() + Constants._BallRadius < posPlrPaddle.getY() + Constants._PaddleY)
+                || (posBall.getY() > posPlrPaddle.getY() && posBall.getY() < posPlrPaddle.getY() + Constants._PaddleY);
+
+        boolean ballOnPlrX = (posBall.getX() + Constants._BallRadius > posPlrPaddle.getX() &&
+                        posBall.getX() + Constants._BallRadius < posPlrPaddle.getX() + Constants._PaddleY)
+                ||(posBall.getX() > posPlrPaddle.getX() && posBall.getX() < posPlrPaddle.getX() + Constants._PaddleX);
         if (ballOnPlrX && ballOnPlrY){
-            System.out.println("Ball hit paddle");
+                ballDirVector = new Point2D(-1 * ballDirVector.getX(), ballDirVector.getY());
         }
     }
 
