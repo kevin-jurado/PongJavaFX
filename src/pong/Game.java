@@ -84,7 +84,7 @@ public class Game{
 
         // Draw the ball on screen
         gc.strokeOval(posBall.getX(),
-                posBall.getY() - Constants._BallRadius,
+                posBall.getY(),
                 Constants._BallRadius, Constants._BallRadius);
     }
 
@@ -124,10 +124,10 @@ public class Game{
     }
 
     public void checkWallCollision(){
-        boolean ballHitBottom = posBall.getY() > 500;
-        boolean ballHitTop = posBall.getY() < + Constants._X/40;
-        boolean ballHitLeft = posBall.getX() < 0;
-        boolean ballHitRight = posBall.getX() > (800 - Constants._X/40);
+        boolean ballHitBottom = posBall.getY() + Constants._BallRadius >= Constants._Y;
+        boolean ballHitTop = posBall.getY() <= 0;
+        boolean ballHitLeft = posBall.getX() <= 0;
+        boolean ballHitRight = posBall.getX() + Constants._BallRadius >= Constants._X;
 
         if (ballHitTop || ballHitBottom){
             ballDirVector = new Point2D(ballDirVector.getX(), -1 * ballDirVector.getY());
@@ -147,7 +147,7 @@ public class Game{
                 || (posBall.getY() > posPlrPaddle.getY() && posBall.getY() < posPlrPaddle.getY() + Constants._PaddleY);
 
         boolean ballOnPlrX = (posBall.getX() + Constants._BallRadius > posPlrPaddle.getX() &&
-                        posBall.getX() + Constants._BallRadius < posPlrPaddle.getX() + Constants._PaddleY)
+                        posBall.getX() + Constants._BallRadius < posPlrPaddle.getX() + Constants._PaddleX)
                 ||(posBall.getX() > posPlrPaddle.getX() && posBall.getX() < posPlrPaddle.getX() + Constants._PaddleX);
         if (ballOnPlrX && ballOnPlrY){
                 ballDirVector = new Point2D(-1 * ballDirVector.getX(), ballDirVector.getY());
