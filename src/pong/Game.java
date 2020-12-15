@@ -2,7 +2,6 @@ package pong;
 
 import java.util.Random;
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -46,7 +45,6 @@ public class Game{
 
         new AnimationTimer()
         {
-            // TODO Try using an override method
             @Override
             public void handle(long currentNanoTime)
             {
@@ -62,14 +60,13 @@ public class Game{
     // Draw the objects
     private void update(){
         // TODO pause state
-
         System.out.println(posPlrPaddle.getY() + " Update");
         gc.clearRect(0, 0, Constants._X, Constants._Y);
 
         updateBall();
         drawObjects();
-
-
+        checkWallCollision();
+        checkPaddleCollision(posPlrPaddle);
     }
 
     // TODO Pretty Up the Graphics
@@ -121,8 +118,38 @@ public class Game{
     }
 
     public void updateBall(){
-        //
+        // We're adding to the position of the gc based
+        // on the angle of the bounce and the distance traveled
         posBall = posBall.add(ballDirVector.multiply(ballSpeed));
+    }
+
+    public void checkWallCollision(){
+        boolean ballHitBottom = posBall.getY() > 500;
+        boolean ballHitTop = posBall.getY() < + Constants._X/40;
+        boolean ballHitLeft = posBall.getX() < 0;
+        boolean ballHitRight = posBall.getX() > (800 - Constants._X/40);
+
+        if (ballHitTop || ballHitBottom){
+            ballDirVector = new Point2D(ballDirVector.getX(), -1 * ballDirVector.getY());
+            //ballSpeed += Constants._BallAcceleration;
+        }
+        if(ballHitLeft || ballHitRight){
+            ballDirVector = new Point2D(-1 * ballDirVector.getX(), ballDirVector.getY());
+            //ballSpeed += Constants._BallAcceleration;
+        }
+    }
+
+    // TODO Get ball colliding with paddles
+    public void checkPaddleCollision(Point2D paddle){
+
+        boolean ballHit;
+        boolean ballOnPlrY = posBall.getY() + Constants._BallRadius > posPlrPaddle.getY()
+                && posBall.getY() < posBall.getY() + Constants._PaddleY;
+        boolean ballOnPlrX = posBall.getX() + Constants._BallRadius > posPlrPaddle.getX()
+                && posBall.getX() < posBall.getX() + Constants._PaddleX;
+        if (ballOnPlrX && ballOnPlrY){
+            System.out.println("Ball hit paddle");
+        }
     }
 
     // Get and set the pause state
@@ -133,4 +160,5 @@ public class Game{
     public State getState() {
         return state;
     }
+
 }
