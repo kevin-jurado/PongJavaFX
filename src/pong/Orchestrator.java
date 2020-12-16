@@ -14,8 +14,8 @@ public class Orchestrator extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("PONG");
         Game pong = new Game(primaryStage, this);
-        //StartScreen startScreen = new StartScreen(primaryStage, this);
-        //startScreen.start();
+        StartScreen startScreen = new StartScreen(primaryStage, this);
+        startScreen.start();
         pong.reset();
         pong.start();
     }
