@@ -7,9 +7,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 // This is the root of the game
@@ -19,19 +21,23 @@ public class Game{
     public Point2D posBall = Constants._ScreenSize.midpoint(Point2D.ZERO);
     public double ballSpeed;
     public Point2D ballDirVector;
+    //Scoring system
+    public int playerScore = 0;
+    public int computerScore = 0;
+    public TextField txtPlayerScore = new TextField("00");
+    public TextField txtComputerScore = new TextField("00");
 
     // 50 is for padding, half of the screen height adjusted for the paddle size
     public Point2D posPlrPaddle = new Point2D(Constants._Padding.getX(),
             Constants._Y/2.0 - Constants._PaddleY/2.0);
     public Point2D posCompPaddle = new Point2D(Constants._X - Constants._Padding.getX() - Constants._PaddleX,
             Constants._Y/2.0 - Constants._PaddleY/2.0);
-
     public static final Random random = new Random();
-
     public boolean isRunning = true;
     public Scene scene;
     public GraphicsContext gc;
 
+    // Constructor
     public Game(Stage primaryStage) {
         Group root = new Group();
         scene = new Scene(root);
@@ -51,28 +57,29 @@ public class Game{
                 update();
             }
         }.start();
-
         primaryStage.show();
-
-        launchBall();
+        start(true);
     }
 
     // Draw the objects
     private void update(){
         // TODO pause state
-        System.out.println(posPlrPaddle.getY() + " Update");
         gc.clearRect(0, 0, Constants._X, Constants._Y);
 
         updateBall();
         drawObjects();
         checkWallCollision();
+        //posCompPaddle = new Point2D(posCompPaddle.getX(), clampComputer(0, Constants._Y - Constants._PaddleY,
+        //    posBall.getY()));
         checkPaddleCollision(posPlrPaddle);
+        checkPaddleCollision(posCompPaddle);
+        handicapAI();
     }
 
     // TODO Pretty Up the Graphics
     // Starts the positions on the canvas
     private void drawObjects() {
-        gc.setFill(Color.GREEN);
+        gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, Constants._X, Constants._Y);
         gc.setStroke(Color.BLUE);
 
@@ -86,6 +93,18 @@ public class Game{
         gc.strokeOval(posBall.getX(),
                 posBall.getY(),
                 Constants._BallRadius, Constants._BallRadius);
+
+        // draw points
+        gc.setFill(Color.WHITE);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(
+                Integer.toString(playerScore),
+                200, 50
+        );
+        gc.fillText(
+                Integer.toString(computerScore),
+                600, 50
+        );
     }
 
     // This is the listener for any time an event happens
@@ -96,25 +115,29 @@ public class Game{
         // Keyboard controls
         if (key == KeyCode.W && posPlrPaddle.getY() > 0 || key == KeyCode.UP && posPlrPaddle.getY() > 0 ){
             posPlrPaddle = posPlrPaddle.add(0, - Constants._PaddleSpeed);
-            System.out.println("UP");
         }
         if (key == KeyCode.S && posPlrPaddle.getY() < 450 || key == KeyCode.DOWN && posPlrPaddle.getY() < 450 ){
             posPlrPaddle = posPlrPaddle.add(0, Constants._PaddleSpeed);
-            System.out.println("DOWN");
         }
 
     }
 
-    public void launchBall(){
-        // Launch the ball
-        boolean ballDirection = random.nextBoolean();
-        // bound to an acute angle on start
-        double ballAngle = Constants._PADDLE_ANGLES[random.nextInt(5) + 1];
-        if (ballDirection){
-            ballAngle *= -1;
+    public void start(boolean playerServe){
+        // Launch the ball and resert the screen
+        // Keep the starting angle between 15 and 45 degrees
+        double ballAngle = Constants.degreesToRadians(random.nextDouble() * 30 + 15);
+        if(random.nextBoolean()){
+            // Randomly flip over x-axis
+            ballAngle -= Math.PI/4;
+        }
+        System.out.println(ballAngle);
+        if (!playerServe){
+            ballAngle -= Math.PI;
         }
         ballSpeed = Constants._BallStartSpeed;
         ballDirVector = new Point2D(Math.cos(ballAngle), Math.sin(ballAngle));
+        posBall = Constants._ScreenSize.midpoint(Point2D.ZERO);
+        System.out.println(ballAngle);
     }
 
     public void updateBall(){
@@ -137,20 +160,59 @@ public class Game{
             ballDirVector = new Point2D(-1 * ballDirVector.getX(), ballDirVector.getY());
             //ballSpeed += Constants._BallAcceleration;
         }
+        if(ballHitRight){
+            playerScore++;
+            start(false);
+        }
+        if(ballHitLeft){
+            computerScore++;
+            start(true);
+        }
     }
 
-    // TODO Get ball colliding with paddles
     public void checkPaddleCollision(Point2D paddle){
 
-        boolean ballOnPlrY = (posBall.getY() + Constants._BallRadius > posPlrPaddle.getY() &&
-                        posBall.getY() + Constants._BallRadius < posPlrPaddle.getY() + Constants._PaddleY)
-                || (posBall.getY() > posPlrPaddle.getY() && posBall.getY() < posPlrPaddle.getY() + Constants._PaddleY);
+        // Check for ball being in contact with paddle side
+        boolean ballOnPlrY = (posBall.getY() + Constants._BallRadius > paddle.getY() &&
+                        posBall.getY() + Constants._BallRadius < paddle.getY() + Constants._PaddleY)
+                || (posBall.getY() > paddle.getY() && posBall.getY() < paddle.getY() + Constants._PaddleY);
 
-        boolean ballOnPlrX = (posBall.getX() + Constants._BallRadius > posPlrPaddle.getX() &&
-                        posBall.getX() + Constants._BallRadius < posPlrPaddle.getX() + Constants._PaddleX)
-                ||(posBall.getX() > posPlrPaddle.getX() && posBall.getX() < posPlrPaddle.getX() + Constants._PaddleX);
-        if (ballOnPlrX && ballOnPlrY){
-                ballDirVector = new Point2D(-1 * ballDirVector.getX(), ballDirVector.getY());
+        boolean ballOnPlrX = (posBall.getX() + Constants._BallRadius > paddle.getX() &&
+                        posBall.getX() + Constants._BallRadius < paddle.getX() + Constants._PaddleX)
+                ||(posBall.getX() > paddle.getX() && posBall.getX() < paddle.getX() + Constants._PaddleX);
+        // Paddle collides
+        if (ballOnPlrX && ballOnPlrY) {
+            ballDirVector = new Point2D(-1 * ballDirVector.getX(), ballDirVector.getY());
+            ballSpeed += Constants._BallAcceleration;
+
+            // if it's moving to the right
+            if (ballDirVector.getX() > 0) {
+                posBall = new Point2D(paddle.getX() - Constants._BallRadius, posBall.getY());
+            }else{
+                posBall = new Point2D(paddle.getX() + Constants._PaddleX, posBall.getY());
+            }
+        }
+    }
+
+    // keeps Comp paddle ai in bounds
+    public double clampComputer(double min, double max, double value){
+        if (value <= min){
+            return min;
+        }else if(value >= max){
+            return max;
+        }else
+            return value;
+    }
+
+    public void handicapAI() {
+        // distance of the center of the paddle from the ball
+        double compLatitude = posCompPaddle.getY() + Constants._PaddleY * 0.5;
+        double ballLatitude = posBall.getY() + Constants._BallRadius / 2;
+        double difference = compLatitude - ballLatitude;
+        if (difference < -30){
+            posCompPaddle = posCompPaddle.add(0, Constants._CompPaddleSpeed);
+        }else if (difference > 30){
+            posCompPaddle = posCompPaddle.add(0, -Constants._CompPaddleSpeed);
         }
     }
 
