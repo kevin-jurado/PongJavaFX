@@ -3,13 +3,11 @@ package pong;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -17,49 +15,57 @@ import javafx.stage.Stage;
 
 public class StartScreen extends GameScene{
 
-    // TODO start, quit
     public StartScreen(Stage stage, Orchestrator orchestrator){
         super(stage, orchestrator);
 
         // select the layout
         GridPane gridPane = new GridPane();
         gridPane.setVgap(50);
-
-        // create a group object
-        Group grpButton = new Group();
+        gridPane.setAlignment(Pos.CENTER);
 
         // create the content
-        Text title = new Text("P O N G");
-        Text instructions = new Text("Use W & S or Up & Down to move\n " +
+        Text txtTitle = new Text("P O N G");
+        Text txtInstructions = new Text("Use the MOUSE, W & S, or Up & Down to move\n " +
+                "First one to get " + Constants._Goal_Area + " points wins \n" +
                 "Select Play to start \n" +
-                "Press Space Bar to pause"+
-                "Press Q to quit");
-        title.getStyleClass().add("title");
-        title.setTextAlignment(TextAlignment.CENTER);
-        instructions.setTextAlignment(TextAlignment.CENTER);
+                "Press ESCAPE to pause \n");
+        txtTitle.getStyleClass().add("title");
+        txtTitle.setTextAlignment(TextAlignment.CENTER);
+        txtInstructions.setTextAlignment(TextAlignment.CENTER);
+        txtTitle.setFont(new Font(50));
 
         // create buttons
         Button btnPlay = new Button("Play");
         Button btnQuit = new Button("Quit");
+        HBox hBox = new HBox(btnPlay, btnQuit);
+        hBox.setSpacing(50);
+        hBox.setAlignment(Pos.BASELINE_CENTER);
 
         // quit the game
         btnQuit.setOnAction(e->Platform.exit());
 
+        // play the game
+        btnPlay.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                orchestrator.setState(GameState.PLAYING);
+            }
+        });
+
         // set the layout
-        gridPane.addRow(0, title);
-        gridPane.addRow(1, instructions);
-        gridPane.addRow(2, btnPlay, btnQuit);
+        gridPane.addRow(0, txtTitle);
+        gridPane.addRow(1, txtInstructions);
+        gridPane.addRow(2, hBox);
 
         // Create the scene
-        Scene scene = new Scene(gridPane, 300, 300);
+        scene = new Scene(gridPane, 300, 300);
 
         // Add the scene to the stage
-        this.stage.setScene(scene);
         this.stage.show();
     }
 
     // Show the the game and start playing it
     public void start(){
+        this.stage.setScene(scene);
         this.stage.show();
         this.animationTimer.start();
     }
@@ -69,11 +75,5 @@ public class StartScreen extends GameScene{
         this.animationTimer.stop();
     }
 
-    private void handleUserInput(KeyEvent e){
-        KeyCode key = e.getCode();
-        // Keyboard controls
-        if(key == KeyCode.Q){
-            System.out.println("Quit here");
-        }
-    }
+
 }

@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
 public class GameScene{
+
     // Variable Declaration
     public Scene scene;
     public GraphicsContext gc;

@@ -18,10 +18,9 @@ public class Constants {
     public static final Point2D _PaddleSize = new Point2D(_PaddleX, _PaddleY);
     public static final Point2D _ScreenSize = new Point2D(_X, _Y);
     public static final Point2D _Padding = new Point2D(50.0, 0.0);
-    public static final double _CompPaddleSpeed = 2.5;
-    public static final double _PaddleSpeed = 25.0;
+
     // so that the ball scores if it gets past the paddle
-    public static final double _Goal_Area = 10;
+    public static final int _Goal_Area = 5;
     public static double degreesToRadians(double degrees)
     {
         return degrees * Math.PI / 180;
@@ -32,5 +31,4 @@ public class Constants {
             degreesToRadians(30),
             degreesToRadians(45)};
 
-    public static final int _Winning_Score = 20;
 }
