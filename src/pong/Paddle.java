@@ -41,9 +41,9 @@ public class Paddle {
         double compLatitude = pos.getY() + Constants._PaddleY * 0.5;
         double ballLatitude = ballPos.getY() + Constants._BallRadius / 2;
         double difference = compLatitude - ballLatitude;
-        if (difference < -30) {
+        if (difference < -Constants._Epsilon) {
             moveDown();
-        } else if (difference > 30) {
+        } else if (difference > Constants._Epsilon) {
             moveUp();
         }
     }

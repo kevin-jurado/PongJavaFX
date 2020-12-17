@@ -26,7 +26,7 @@ public class StartScreen extends GameScene{
         // create the content
         Text txtTitle = new Text("P O N G");
         Text txtInstructions = new Text("Use the MOUSE, W & S, or Up & Down to move\n " +
-                "First one to get " + Constants._Goal_Area + " points wins \n" +
+                "First one to get " + Constants._WinningScore + " points wins \n" +
                 "Select Play to start \n" +
                 "Press ESCAPE to pause \n");
         txtTitle.getStyleClass().add("title");

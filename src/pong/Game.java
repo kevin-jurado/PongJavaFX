@@ -1,6 +1,6 @@
 package pong;
 
-import java.util.Random;
+import java.io.InputStream;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -27,8 +27,10 @@ public class Game extends GameScene {
     // Constructor
     public Game(Stage primaryStage, Orchestrator orchestrator) {
         super(primaryStage, orchestrator);
-          scene.setOnKeyPressed(this::handleUserInput);
-          scene.setOnMouseMoved(this::handleMouseMovement);
+        scene.setOnKeyPressed(this::handleUserInput);
+        scene.setOnMouseMoved(this::handleMouseMovement);
+
+        InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("roboto-bold.ttf");
     }
 
     // Show the the game and start playing it
@@ -61,11 +63,11 @@ public class Game extends GameScene {
     public void update() {
         gc.clearRect(0, 0, Constants._X, Constants._Y);
         ball.updatePosition();
-        drawObjects();
         handleBallState(ball.checkCollisions());
         ball.checkPaddleCollision(playerPaddle.pos);
         ball.checkPaddleCollision(computerPaddle.pos);
         computerPaddle.runAI(ball.pos);
+        drawObjects();
     }
 
     // Starts the positions on the canvas
@@ -107,8 +109,8 @@ public class Game extends GameScene {
                 Constants._BallRadius, Constants._BallRadius);
 
         // draw score
+        gc.setFont(new Font(50));
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.setFont(new Font(30));
         gc.fillText(
                 Integer.toString(playerScore),
                 200, 50
@@ -142,7 +144,7 @@ public class Game extends GameScene {
     public void handleBallState(BallState state) {
         if (state == BallState.HIT_RIGHT_WALL) {
             playerScore++;
-            if (playerScore >= Constants._Goal_Area) {
+            if (playerScore >= Constants._WinningScore) {
                 reset();
                 orchestrator.setState(GameState.WON);
             }
@@ -150,7 +152,7 @@ public class Game extends GameScene {
         }
         if (state == BallState.HIT_LEFT_WALL) {
             computerScore++;
-            if (computerScore >= Constants._Goal_Area) {
+            if (computerScore >= Constants._WinningScore) {
                 reset();
                 orchestrator.setState(GameState.LOST);
             }
