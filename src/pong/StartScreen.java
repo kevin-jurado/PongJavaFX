@@ -3,9 +3,11 @@ package pong;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -32,6 +34,7 @@ public class StartScreen extends GameScene{
         txtInstructions.setTextAlignment(TextAlignment.CENTER);
         txtTitle.setTextAlignment(TextAlignment.CENTER);
         txtTitle.setFont(new Font(50));
+        GridPane.setHalignment(txtTitle, HPos.CENTER);
 
         // create buttons
         Button btnPlay = new Button("Play");

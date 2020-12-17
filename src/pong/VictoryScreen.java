@@ -3,6 +3,7 @@ package pong;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -31,6 +32,8 @@ public class VictoryScreen extends GameScene{
         txtVictory.setTextAlignment(TextAlignment.CENTER);
         txtTitle.setFont(new Font(50));
         txtVictory.setFont(new Font(20));
+        GridPane.setHalignment(txtTitle, HPos.CENTER);
+        GridPane.setHalignment(txtVictory, HPos.CENTER);
 
         // create buttons
         Button btnPlay = new Button("Play Again");

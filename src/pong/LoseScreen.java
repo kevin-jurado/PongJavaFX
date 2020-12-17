@@ -3,6 +3,7 @@ package pong;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -25,12 +26,14 @@ public class LoseScreen extends GameScene{
 
         // create the content
         Text txtTitle = new Text("P O N G");
-        Text txtVictory = new Text("You Lose!");
+        Text txtLose = new Text("You Lose!");
         txtTitle.getStyleClass().add("title");
         txtTitle.setTextAlignment(TextAlignment.CENTER);
-        txtVictory.setTextAlignment(TextAlignment.CENTER);
+        txtLose.setTextAlignment(TextAlignment.CENTER);
         txtTitle.setFont(new Font(50));
-        txtVictory.setFont(new Font(20));
+        txtLose.setFont(new Font(20));
+        GridPane.setHalignment(txtTitle, HPos.CENTER);
+        GridPane.setHalignment(txtLose, HPos.CENTER);
 
         // create buttons
         Button btnPlay = new Button("Play Again");
@@ -51,7 +54,7 @@ public class LoseScreen extends GameScene{
 
         // set the layout
         gridPane.addRow(0, txtTitle);
-        gridPane.addRow(1, txtVictory);
+        gridPane.addRow(1, txtLose);
         gridPane.addRow(2, hBox);
 
         // Create the scene

@@ -2,6 +2,7 @@ package pong;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -32,6 +33,7 @@ public class PauseScreen extends GameScene{
         txtTitle.setTextAlignment(TextAlignment.CENTER);
         txtInstructions.setTextAlignment(TextAlignment.CENTER);
         txtTitle.setFont(new Font(50));
+        GridPane.setHalignment(txtTitle, HPos.CENTER);
 
         // create buttons
         Button btnPlay = new Button("Resume");
