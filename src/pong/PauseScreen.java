@@ -25,18 +25,17 @@ public class PauseScreen extends GameScene{
         // create the content
         Text txtTitle = new Text("PAUSED");
         Text txtInstructions = new Text("Use the MOUSE, W & S, or Up & Down to move\n " +
-                "First one to get " + Constants._Goal_Area + " points wins \n" +
+                "First one to get " + Constants._WinningScore + " points wins \n" +
                 "Select Play to start \n" +
                 "Press ESCAPE to pause \n" +
                 "Select Exit to return to main menu");
-        txtTitle.getStyleClass().add("title");
         txtTitle.setTextAlignment(TextAlignment.CENTER);
         txtInstructions.setTextAlignment(TextAlignment.CENTER);
         txtTitle.setFont(new Font(50));
 
         // create buttons
         Button btnPlay = new Button("Resume");
-        Button btnQuit = new Button("Exit");
+        Button btnQuit = new Button("Quit");
         HBox hBox = new HBox(btnPlay, btnQuit);
         hBox.setSpacing(50);
         hBox.setAlignment(Pos.BASELINE_CENTER);

@@ -34,7 +34,7 @@ public class VictoryScreen extends GameScene{
 
         // create buttons
         Button btnPlay = new Button("Play Again");
-        Button btnQuit = new Button("Quit");
+        Button btnQuit = new Button("Exit");
         HBox hBox = new HBox(btnPlay, btnQuit);
         hBox.setSpacing(50);
         hBox.setAlignment(Pos.BASELINE_CENTER);

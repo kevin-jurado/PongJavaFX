@@ -29,14 +29,13 @@ public class StartScreen extends GameScene{
                 "First one to get " + Constants._WinningScore + " points wins \n" +
                 "Select Play to start \n" +
                 "Press ESCAPE to pause \n");
-        txtTitle.getStyleClass().add("title");
-        txtTitle.setTextAlignment(TextAlignment.CENTER);
         txtInstructions.setTextAlignment(TextAlignment.CENTER);
+        txtTitle.setTextAlignment(TextAlignment.CENTER);
         txtTitle.setFont(new Font(50));
 
         // create buttons
         Button btnPlay = new Button("Play");
-        Button btnQuit = new Button("Quit");
+        Button btnQuit = new Button("Exit");
         HBox hBox = new HBox(btnPlay, btnQuit);
         hBox.setSpacing(50);
         hBox.setAlignment(Pos.BASELINE_CENTER);
