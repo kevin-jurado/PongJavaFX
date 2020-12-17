@@ -29,8 +29,6 @@ public class Game extends GameScene {
         super(primaryStage, orchestrator);
         scene.setOnKeyPressed(this::handleUserInput);
         scene.setOnMouseMoved(this::handleMouseMovement);
-
-        InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("roboto-bold.ttf");
     }
 
     // Show the the game and start playing it
