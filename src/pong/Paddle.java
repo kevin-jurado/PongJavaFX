@@ -12,14 +12,14 @@ public class Paddle {
     }
 
     public void moveUp() {
-        pos = pos.add(0, -this.speed);
+        pos = pos.add(0, -speed);
         if (pos.getY() <= 0) {
             pos = new Point2D(pos.getX(), 0);
         }
     }
 
     public void moveDown() {
-        pos = pos.add(0, this.speed);
+        pos = pos.add(0, speed);
         if (pos.getY() + Constants._PaddleY >= Constants._Y) {
             pos = new Point2D(pos.getX(), Constants._Y - Constants._PaddleY);
         }
@@ -34,5 +34,17 @@ public class Paddle {
         } else
             lat = latitude;
         pos = new Point2D(pos.getX(), lat);
+    }
+
+    public void runAI(Point2D ballPos) {
+        // distance of the center of the paddle from the ball
+        double compLatitude = pos.getY() + Constants._PaddleY * 0.5;
+        double ballLatitude = ballPos.getY() + Constants._BallRadius / 2;
+        double difference = compLatitude - ballLatitude;
+        if (difference < -30) {
+            moveDown();
+        } else if (difference > 30) {
+            moveUp();
+        }
     }
 }
